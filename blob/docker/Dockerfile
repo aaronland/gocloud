@@ -1,4 +1,4 @@
-FROM golang:1.22-alpine as gotools
+FROM golang:1.25-alpine as gotools
 
 RUN mkdir /build
 
