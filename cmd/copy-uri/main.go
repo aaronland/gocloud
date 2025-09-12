@@ -8,7 +8,7 @@ import (
 	_ "gocloud.dev/blob/fileblob"
 	_ "gocloud.dev/blob/memblob"
 	_ "gocloud.dev/blob/s3blob"
-	
+
 	"github.com/aaronland/gocloud/blob/app/copyuri"
 )
 

@@ -8,7 +8,7 @@ import (
 
 	aa_dynamodb "github.com/aaronland/go-aws/v3/dynamodb"
 	"gocloud.dev/docstore"
-	"gocloud.dev/docstore/awsdynamodb/v2"	
+	"gocloud.dev/docstore/awsdynamodb/v2"
 )
 
 const DYNAMODB_FALLBACK_FUNC_KEY string = "aaronland-dynamodb-fallback-func"
@@ -30,17 +30,24 @@ func OpenCollection(ctx context.Context, uri string) (*docstore.Collection, erro
 		q := u.Query()
 
 		partition_key := q.Get("partition_key")
-		region := q.Get("region")
-		local := q.Get("local")
-		credentials := q.Get("credentials")
 		q_allow_scans := q.Get("allow_scans")
 
-		cl_uri := fmt.Sprintf("dynamodb://?region=%s&credentials=%s&local=%s", region, credentials, local)
+		cl_q := url.Values{}
+		cl_q.Set("region", q.Get("region"))
+		cl_q.Set("credentials", q.Get("credentials"))
 
-		cl, err := aa_dynamodb.NewClient(ctx, cl_uri)
+		if q.Has("local") {
+			cl_q.Set("local", q.Get("local"))
+		}
+
+		cl_uri := url.URL{}
+		cl_uri.Scheme = "dynamodb"
+		cl_uri.RawQuery = cl_q.Encode()
+
+		cl, err := aa_dynamodb.NewClient(ctx, cl_uri.String())
 
 		if err != nil {
-			return nil, fmt.Errorf("Failed to create DynamoDB client, %w", err)
+			return nil, fmt.Errorf("Failed to create DynamoDB client (%s), %w", cl_uri.String(), err)
 		}
 
 		col_opts := &awsdynamodb.Options{}
