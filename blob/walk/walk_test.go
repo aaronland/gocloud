@@ -8,7 +8,7 @@ import (
 	"testing"
 
 	"gocloud.dev/blob"
-	_ "gocloud.dev/blob/fileblob"	
+	_ "gocloud.dev/blob/fileblob"
 )
 
 func TestWalkBucket(t *testing.T) {
