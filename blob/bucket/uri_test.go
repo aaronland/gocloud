@@ -14,6 +14,18 @@ func TestParseURI(t *testing.T) {
 		"file:///usr/local/example.jpg": [2]string{
 			"file:///usr/local/", "example.jpg",
 		},
+		"s3blob://example/folder/example.txt?region=us-east-1&credentials=session": [2]string{
+			"s3blob://example?credentials=session&prefix=folder%2F&region=us-east-1", "example.txt",
+		},
+		"s3://example/folder/example.txt?region=us-east-1&credentials=session": [2]string{
+			"s3://example?credentials=session&prefix=folder%2F&region=us-east-1", "example.txt",
+		},
+		"s3://example/example.txt?prefix=folder/&region=us-east-1&credentials=session": [2]string{
+			"s3://example?credentials=session&prefix=folder%2F&region=us-east-1", "example.txt",
+		},
+		"s3://example/test/example.txt?prefix=folder/&region=us-east-1&credentials=session": [2]string{
+			"s3://example?credentials=session&prefix=folder%2Ftest%2F&region=us-east-1", "example.txt",
+		},
 	}
 
 	for uri, expected := range tests {
