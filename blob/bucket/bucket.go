@@ -32,7 +32,7 @@ func OpenBucket(ctx context.Context, bucket_uri string) (*gc_blob.Bucket, error)
 
 		u.Scheme = "file"
 		u.Path = abs_path
-		
+
 	case "cwd":
 
 		cwd, err := os.Getwd()

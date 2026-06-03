@@ -1,10 +1,10 @@
-package s3
+package writer
 
 import (
 	"context"
 	"fmt"
-	"log/slog"
 
+	aa_s3 "github.com/aaronland/gocloud/blob/s3"
 	aws_s3 "github.com/aws/aws-sdk-go-v2/service/s3"
 	"gocloud.dev/blob"
 )
@@ -14,20 +14,19 @@ import (
 // defined in 'acl'.
 func NewWriterWithACL(ctx context.Context, bucket *blob.Bucket, path string, str_acl string) (*blob.Writer, error) {
 
-	slog.Warn("This method (s3.NewWriterWithACL) is deprecated. Please use write.NewWriterWithACL instead.")
-
-	acl, err := StringACLToObjectCannedACL(str_acl)
-
-	if err != nil {
-		return nil, fmt.Errorf("Failed to derive canned ACL from string, %w", err)
-	}
-
 	before := func(asFunc func(any) bool) error {
 
 		req := &aws_s3.PutObjectInput{}
 		ok := asFunc(&req)
 
 		if ok {
+
+			acl, err := aa_s3.StringACLToObjectCannedACL(str_acl)
+
+			if err != nil {
+				return fmt.Errorf("Failed to derive canned ACL from string, %w", err)
+			}
+
 			req.ACL = acl
 		}
 
