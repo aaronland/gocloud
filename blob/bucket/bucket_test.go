@@ -17,6 +17,7 @@ func TestOpenBucket(t *testing.T) {
 		"mem://",
 		// "s3://example?region=us-east-1",
 		"cwd://",
+		"/tmp",
 	}
 
 	for _, uri := range uris {
